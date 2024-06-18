@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="selection-form">
+        <h2>Select Room and Enter Username</h2>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            id="username"
+            type="text"
+            placeholder="Enter your username"
+            maxlength="20"
+          />
+        </div>
+        <div class="form-group">
+          <label for="room">Room</label>
+          <select id="room"></select>
+        </div>
+        <div class="form-group">
+          <button id="join-btn">Join Room</button>
+        </div>
+        <div class="form-group">
+          <label for="new-room">New Room Name</label>
+
+          <input
+            id="new-room"
+            type="text"
+            placeholder="Enter new room name"
+            maxlength="20"
+          />
+          <button id="create-room-btn">Create Room</button>
+        </div>
+      </div>
+
+      <div id="chat-container" class="hidden">
+        <h2>Chat App</h2>
+        <div id="room-info">
+          <h3 id="room-name"></h3>
+          <div id="users-info">
+            <button id="user-list-btn">
+              Users: <span id="user-count">0</span>
+            </button>
+            <ul id="users" class="hidden"></ul>
+          </div>
+        </div>
+        <div id="chat-box" class="chat-box"></div>
+        <input
+          id="chat-input"
+          class="chat-input"
+          placeholder="Enter your message"
+        />
+        <button id="leave-btn">Leave Chat</button>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
