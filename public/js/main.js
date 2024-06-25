@@ -7,11 +7,10 @@ const leaveBtn = document.getElementById("leave-btn");
 const createRoomBtn = document.getElementById("create-room-btn");
 const roomName = document.getElementById("room-name");
 const usersList = document.getElementById("users");
-const userCountElement = document.getElementById("user-count");
 const selectionForm = document.getElementById("selection-form");
 const chatContainer = document.getElementById("chat-container");
 const chatBox = document.getElementById("chat-box");
-const userListBtn = document.getElementById("user-list-btn");
+const sendBtn = document.getElementById("send-btn");
 
 let username = "";
 let room = "";
@@ -22,18 +21,6 @@ function addMessage(username, text) {
   div.innerHTML = `<strong>${username}</strong>: ${text} <span class="timestamp">${timestamp}</span>`;
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function updateUserList(users) {
-  const userCount = users.length;
-  userCountElement.textContent = userCount;
-
-  usersList.innerHTML = "";
-  users.forEach((user) => {
-    const userItem = document.createElement("li");
-    userItem.textContent = user.username;
-    usersList.appendChild(userItem);
-  });
 }
 
 joinBtn.addEventListener("click", () => {
@@ -56,6 +43,13 @@ chatInput.addEventListener("keypress", (e) => {
   }
 });
 
+sendBtn.addEventListener("click", () => {
+  if (chatInput.value.trim() !== "") {
+    socket.emit("chatMessage", chatInput.value);
+    chatInput.value = "";
+  }
+});
+
 leaveBtn.addEventListener("click", () => {
   socket.emit("leaveRoom");
   chatBox.innerHTML = "";
@@ -73,17 +67,30 @@ createRoomBtn.addEventListener("click", () => {
   }
 });
 
-userListBtn.addEventListener("click", () => {
-  usersList.classList.toggle("hidden");
-});
-
 socket.on("message", ({ username, text }) => {
   addMessage(username, text);
 });
 
 socket.on("roomUsers", ({ users }) => {
-  updateUserList(users);
+  usersList.innerHTML = users
+    .map((user) => `<li>${user.username}</li>`)
+    .join("");
 });
+
+function updateUserList(users) {
+  const userCount = users.length;
+  const userCountElement = document.getElementById("user-count");
+  const userListElement = document.getElementById("users");
+  userListElement.innerHTML = "";
+
+  users.forEach((user) => {
+    const userItem = document.createElement("li");
+    userItem.textContent = user.username;
+    userListElement.appendChild(userItem);
+  });
+
+  userCountElement.textContent = userCount;
+}
 
 socket.on("updateRooms", (rooms) => {
   roomSelect.innerHTML = "";
